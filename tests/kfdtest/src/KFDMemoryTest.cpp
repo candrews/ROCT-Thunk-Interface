@@ -36,7 +36,7 @@
 #include "PM4Packet.hpp"
 #include "SDMAQueue.hpp"
 #include "SDMAPacket.hpp"
-#include "linux/kfd_ioctl.h"
+#include <linux/kfd_ioctl.h>
 
 const char* gfx8_ScratchCopyDword =
 "\

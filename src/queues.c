@@ -25,7 +25,7 @@
 
 #include "libhsakmt.h"
 #include "fmm.h"
-#include "linux/kfd_ioctl.h"
+#include <linux/kfd_ioctl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
@@ -798,5 +798,22 @@ HSAKMT_STATUS HSAKMTAPI hsaKmtSetTrapHandler(HSAuint32 Node,
 	int err = kmtIoctl(kfd_fd, AMDKFD_IOC_SET_TRAP_HANDLER, &args);
 
 	return (err == -1) ? HSAKMT_STATUS_ERROR : HSAKMT_STATUS_SUCCESS;
+}
+
+uint32_t *convert_queue_ids(HSAuint32 NumQueues, HSA_QUEUEID *Queues)
+{
+	uint32_t *queue_ids_ptr;
+	unsigned int i;
+
+	queue_ids_ptr = malloc(NumQueues * sizeof(uint32_t));
+	if (!queue_ids_ptr)
+		return NULL;
+
+	for (i = 0; i < NumQueues; i++) {
+		struct queue *q = PORT_UINT64_TO_VPTR(Queues[i]);
+
+		queue_ids_ptr[i] = q->queue_id;
+	}
+	return queue_ids_ptr;
 }
 
